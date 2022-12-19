@@ -9,6 +9,7 @@ MAP = [
     '##    # # ',
     '# ########',
     '### #    #',
+    '     #####',
     '#X########',
 ]
 
@@ -19,7 +20,27 @@ HEIGHT = len(MAP)
 SCREEN_WIDTH = WIDTH * BLOCK_SIDE
 SCREEN_HEIGHT = HEIGHT * BLOCK_SIDE
 
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-font = pygame.font.SysFont('arial', 60)
 
+class Wall:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.texture = pygame.image.load(f'images/wall.png')
+
+
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    font = pygame.font.SysFont('arial', 60)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        pygame.display.flip()
+    pygame.quit()
+
+
+if __name__ == '__main__':
+    main()
