@@ -124,7 +124,7 @@ while running:
                 maze.set_player_direction(Direction.RIGHT)
         elif event.type == pygame.KEYUP:
             maze.set_player_direction(Direction.NONE)
-    maze.move_player()
+        maze.move_player()
 
     screen.fill((0, 0, 0))
     maze.draw()
