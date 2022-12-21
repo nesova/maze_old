@@ -26,6 +26,9 @@ class Wall:
         self.pos = []
         self.texture = pygame.image.load(f'images/wall.png')
 
+    def return_walls_coords(self):
+        return self.pos
+
     def get_coord(self, x, y):
         self.pos.append((x, y))
 
@@ -78,6 +81,7 @@ class Maze:
                     self.wall.get_coord(j * BLOCK_SIDE, i * BLOCK_SIDE)
                 elif MAP[i][j] == "@":
                     self.player.get_pos(j * BLOCK_SIDE, i * BLOCK_SIDE)
+        self.pos = self.wall.return_walls_coords()
 
     def draw(self):
         self.wall.draw()
@@ -91,13 +95,13 @@ class Maze:
 
     def player_can_move(self, direction):
         pcx, pcy = self.get_player_cell()
-        if direction == 1 and pcy - CELL_SIDE < 0:
+        if direction == 1 and (pcy - CELL_SIDE < 0 or (pcx, pcy - CELL_SIDE) in self.pos):
             return False
-        if direction == 2 and pcy + CELL_SIDE > SCREEN_HEIGHT:
+        if direction == 2 and (pcy + CELL_SIDE > SCREEN_HEIGHT or (pcx, pcy + CELL_SIDE) in self.pos):
             return False
-        if direction == 3 and pcx - CELL_SIDE < 0:
+        if direction == 3 and (pcx - CELL_SIDE < 0 or (pcx - CELL_SIDE, pcy) in self.pos):
             return False
-        if direction == 3 and pcx + CELL_SIDE > SCREEN_WIDTH:
+        if direction == 4 and (pcx + CELL_SIDE > SCREEN_WIDTH or (pcx + CELL_SIDE, pcy) in self.pos):
             return False
         if direction == 0:
             return None
@@ -140,5 +144,5 @@ if __name__ == '__main__':
         maze.draw()
 
         pygame.display.flip()
-        pygame.time.wait(120)
+        pygame.time.wait(100)
 pygame.quit()
