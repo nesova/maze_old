@@ -110,7 +110,6 @@ class Maze:
 maze = Maze()
 running = True
 while running:
-    maze = Maze()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
