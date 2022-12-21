@@ -26,13 +26,27 @@ SCREEN_HEIGHT = HEIGHT * BLOCK_SIDE
 
 class Wall:
     def __init__(self):
+        self.pos = []
         self.texture = pygame.image.load(f'images/wall.png')
 
+    def get_coord(self, x, y):
+        self.pos.append((x, y))
+
     def draw(self):
+        for pos in self.pos:
+            screen.blit(self.texture, pos)
+
+
+class Maze:
+    def __init__(self):
+        self.wall = Wall()
         for i in range(HEIGHT):
             for j in range(WIDTH):
                 if MAP[i][j] == '#':
-                    screen.blit(self.texture, (j * CELL_SIDE, i * CELL_SIDE))
+                    self.wall.get_coord(j * BLOCK_SIDE, i * BLOCK_SIDE)
+
+    def draw(self):
+        self.wall.draw()
 
 
 if __name__ == '__main__':
@@ -45,5 +59,7 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+        maze = Maze()
+        maze.draw()
         pygame.display.flip()
     pygame.quit()
