@@ -17,32 +17,37 @@ BLOCK_SIDE = 50
 CELL_SIDE = 50
 WIDTH = len(MAP[0])
 HEIGHT = len(MAP)
-
 SCREEN_WIDTH = WIDTH * BLOCK_SIDE
 SCREEN_HEIGHT = HEIGHT * BLOCK_SIDE
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 class Wall:
-    def __init__(self, x, y):
-        self.pos = (x, y)
-        self.wall_image = pygame.image.load('wall.png')
+    def __init__(self):
+        self.pos = []
+        self.texture = pygame.image.load(f'images/wall.png')
+
+    def get_coord(self, x, y):
+        self.pos.append((x, y))
 
     def draw(self):
-        screen.blit(self.wall_image, self.pos)
+        for pos in self.pos:
+            screen.blit(self.texture, pos)
 
 
 class Player:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.player_image = pygame.image.load('player.png')
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+        self.texture = pygame.image.load(f'images/player.png')
         self.step = CELL_SIDE
         self.direction = Direction.NONE
 
+    def get_pos(self, x, y):
+        self.x = x
+        self.y = y
+
     def draw(self):
-        screen.blit(self.player_image, (self.x, self.y))
+        screen.blit(self.texture, (self.x, self.y))
 
     def move(self):
         if self.direction == 1:
@@ -55,7 +60,6 @@ class Player:
             self.x += self.step
 
 
-
 class Direction:
     NONE = 0
     UP = 1
@@ -65,18 +69,18 @@ class Direction:
 
 
 class Maze:
-    def __init__(self):    
-        self.walls = set()
+    def __init__(self):
+        self.wall = Wall()
+        self.player = Player()
         for i in range(HEIGHT):
             for j in range(WIDTH):
                 if MAP[i][j] == '#':
-                    self.walls.add(Wall(j * BLOCK_SIDE, i * BLOCK_SIDE))
-                elif MAP[i][j] == '@':
-                    self.player = Player(j * BLOCK_SIDE, i * BLOCK_SIDE)
+                    self.wall.get_coord(j * BLOCK_SIDE, i * BLOCK_SIDE)
+                elif MAP[i][j] == "@":
+                    self.player.get_pos(j * BLOCK_SIDE, i * BLOCK_SIDE)
 
     def draw(self):
-        for wall in self.walls:
-            wall.draw()
+        self.wall.draw()
         self.player.draw()
 
     def set_player_direction(self, direction):
@@ -89,11 +93,11 @@ class Maze:
         pcx, pcy = self.get_player_cell()
         if direction == 1 and pcy - CELL_SIDE < 0:
             return False
-        if direction == 2 and pcy + CELL_SIDE >= SCREEN_HEIGHT:
+        if direction == 2 and pcy + CELL_SIDE > SCREEN_HEIGHT:
             return False
         if direction == 3 and pcx - CELL_SIDE < 0:
             return False
-        if direction == 3 and pcx + CELL_SIDE >= SCREEN_WIDTH:
+        if direction == 3 and pcx + CELL_SIDE > SCREEN_WIDTH:
             return False
         if direction == 0:
             return None
@@ -104,31 +108,37 @@ class Maze:
         self.player.move()
 
     def get_player_cell(self):
-        return (self.player.x , self.player.y)
+        return (self.player.x, self.player.y)
 
 
-maze = Maze()
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                maze.set_player_direction(Direction.UP)
-            elif event.key == pygame.K_DOWN:
-                maze.set_player_direction(Direction.DOWN)
-            elif event.key == pygame.K_LEFT:
-                maze.set_player_direction(Direction.LEFT)
-            elif event.key == pygame.K_RIGHT:
-                maze.set_player_direction(Direction.RIGHT)
-        elif event.type == pygame.KEYUP:
-            maze.set_player_direction(Direction.NONE)
+if __name__ == '__main__':
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    font = pygame.font.SysFont('arial', 60)
+    maze = Maze()
+
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    maze.set_player_direction(Direction.UP)
+                elif event.key == pygame.K_DOWN:
+                    maze.set_player_direction(Direction.DOWN)
+                elif event.key == pygame.K_LEFT:
+                    maze.set_player_direction(Direction.LEFT)
+                elif event.key == pygame.K_RIGHT:
+                    maze.set_player_direction(Direction.RIGHT)
+            elif event.type == pygame.KEYUP:
+                maze.set_player_direction(Direction.NONE)
         maze.move_player()
 
-    screen.fill((0, 0, 0))
-    maze.draw()
+        screen.fill((0, 0, 0))
+        maze.draw()
 
-    pygame.display.flip()
-    pygame.time.wait(66)
+        pygame.display.flip()
+        pygame.time.wait(120)
 pygame.quit()
