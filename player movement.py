@@ -104,7 +104,7 @@ class Maze:
         self.player.move()
 
     def get_player_cell(self):
-        return (self.player.x * CELL_SIDE, self.player.y * CELL_SIDE)
+        return (self.player.x , self.player.y)
 
 
 maze = Maze()
