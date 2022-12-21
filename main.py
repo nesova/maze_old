@@ -26,13 +26,19 @@ class Wall:
         self.x = x
         self.y = y
         self.texture = pygame.image.load(f'images/wall.png')
+        
+    def draw(self):
+        for i in range(HEIGHT):
+            for j in range(WIDTH):
+                if MAP[i][j] == '#':
+                    screen.blit(self.texture, (j * CELL_SIDE, i * CELL_SIDE))
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     font = pygame.font.SysFont('arial', 60)
-
+    
     running = True
     while running:
         for event in pygame.event.get():
