@@ -108,7 +108,6 @@ class Maze:
 
 
 maze = Maze()
-maze.draw()
 running = True
 while running:
     maze = Maze()
