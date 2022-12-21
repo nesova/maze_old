@@ -89,11 +89,11 @@ class Maze:
         pcx, pcy = self.get_player_cell()
         if direction == 1 and pcy - CELL_SIDE < 0:
             return False
-        if direction == 2 and pcy + CELL_SIDE > SCREEN_HEIGHT:
+        if direction == 2 and pcy + CELL_SIDE >= SCREEN_HEIGHT:
             return False
         if direction == 3 and pcx - CELL_SIDE < 0:
             return False
-        if direction == 3 and pcx + CELL_SIDE > SCREEN_WIDTH:
+        if direction == 3 and pcx + CELL_SIDE >= SCREEN_WIDTH:
             return False
         if direction == 0:
             return None
